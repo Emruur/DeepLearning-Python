@@ -3,19 +3,21 @@ import random
 
 class Network:
 
-    def __init__(self,sizes) -> None:
-        self.layers= len(sizes)
-        self.sizes= sizes
-        weight_shapes= np.array([(a,b) for a,b in zip(sizes[1:],sizes[:-1])])
-        self.weights= np.array([np.random.standard_normal(s) for s in weight_shapes],dtype=object)
-        self.biases= np.array([np.zeros((s,1)) for s in sizes[1:]],dtype=object)
-
-    def __init__(self,sizes,weights,biases) -> None:
-        self.layers= len(sizes)
-        self.sizes= sizes
-        self.weights= weights
-        self.biases= biases
+    def __init__(self,sizes,weights= None, biases= None) -> None:
         
+        if biases!=None or weights!=None:
+            print("Network loaded")
+            self.layers= len(sizes)
+            self.sizes= sizes
+            self.weights= weights
+            self.biases= biases
+        else:
+            print("Network created")
+            self.layers= len(sizes)
+            self.sizes= sizes
+            weight_shapes= np.array([(a,b) for a,b in zip(sizes[1:],sizes[:-1])])
+            self.weights= np.array([np.random.standard_normal(s) for s in weight_shapes],dtype=object)
+            self.biases= np.array([np.zeros((s,1)) for s in sizes[1:]],dtype=object)
 
     def feedForward(self,input):
         #takes an input vector and outputs a vector based on the current weights and biases

@@ -12,11 +12,12 @@ test_set= [(x,y) for x,y in zip(test_images,test_labels)]
 
 def save_network(network)->None:
 	'''Saves the weights and biases to a local file as weights,biases,sizes'''
-	np.savez("wb.npz", weights=network.weights, biases=network.biases, sizes= network.sizes)
+	np.savez("wb.npz", weights=network.weights, biases=network.biases, sizes= network.sizes,dtype=object)
+	print("Network saved")
 
 def create_network():
 	'''Initializes a new neural network and returns it'''
-	return nn.Network((786,16,16,10))
+	return nn.Network((784,16,16,10))
 
 def train_network(network, epochs= 10, t_rate=1):
 	'''Trains and returns the network with the available data imported'''
@@ -25,16 +26,14 @@ def train_network(network, epochs= 10, t_rate=1):
 
 def load_network():
 	'''Loads and returns a locally stored neural network'''
-	try:
-		data= np.load("wb.npz")
-
+	
+	with np.load('wb.npz',allow_pickle=True) as data: 
 		w= data["weights"]
 		b= data["biases"]
 		s= data["sizes"]
 
-		return nn.Network(s,w,b)
-	except:
-		print("No network saved, create a new network!")
+	return nn.Network(s,w,b)
+	
 	
 
 
