@@ -10,6 +10,12 @@ class Network:
         self.weights= np.array([np.random.standard_normal(s) for s in weight_shapes],dtype=object)
         self.biases= np.array([np.zeros((s,1)) for s in sizes[1:]],dtype=object)
 
+    def __init__(self,sizes,weights,biases) -> None:
+        self.layers= len(sizes)
+        self.sizes= sizes
+        self.weights= weights
+        self.biases= biases
+        
 
     def feedForward(self,input):
         #takes an input vector and outputs a vector based on the current weights and biases
@@ -66,13 +72,12 @@ class Network:
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, eta)
 
-            
-
             if test_data:
                 print("Epoch {0}: {1} / {2}".format(
-                    j, self.evaluate(test_data), n_test)) 
+                    j+1, self.evaluate(test_data), n_test)) 
             else:
-                print("Epoch"+j+" complete") 
+                print("Epoch "+str(j+1)+" complete...") 
+        print("Training complete!")
 
     def update_mini_batch(self, mini_batch, eta):
 
@@ -111,7 +116,7 @@ class Network:
         to ``self.biases`` and ``self.weights``."""
         nabla_b = [np.zeros(b.shape) for b in self.biases]
         nabla_w = [np.zeros(w.shape) for w in self.weights]
-        # feedforward
+        #    feedForward
         activation = x
         activations = [x] # list to store all the activations, layer by layer
         zs = [] # list to store all the z vectors, layer by layer
@@ -131,7 +136,7 @@ class Network:
         # second-last layer, and so on.  It's a renumbering of the
         # scheme in the book, used here to take advantage of the fact
         # that Python can use negative indices in lists.
-        for l in range(2, self.num_layers):
+        for l in range(2, self.    layers):
             z = zs[-l]
             sp = Network.sigmoid_prime(z)
             delta = np.dot(self.weights[-l+1].transpose(), delta) * sp
@@ -154,9 +159,10 @@ class Network:
         #Aimed at testing the progress, returns how many of the inputs in the whole test data
         #that the network guessed correctly
 
-        test_results = [(np.argmax(self.feedforward(x)), y)
-                        for (x, y) in test_data]
-        return sum(int(x == y) for (x, y) in test_results)
+        test_results = np.array([(np.argmax(self.feedForward(x)), np.argmax(y))
+                        for (x, y) in test_data])
+
+        return sum(int(x==y) for (x,y) in test_results)
 
 
         
